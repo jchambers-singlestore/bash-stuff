@@ -12,11 +12,16 @@ export i2=i-0449445745458f2fd
 state1=`aws ec2 describe-instances --instance-ids $i1 | grep STATE | awk '{print $3}'`
 state2=`aws ec2 describe-instances --instance-ids $i2 | grep STATE | awk '{print $3}'`
 
+#TAGS1=`aws ec2 describe-instances --instance-ids i1 | grep TAGS`
+#TAGS2=`aws ec2 describe-instances --instance-ids i2 | grep TAGS`
+
 ## Ensure instances are running
 if [[ "$state1" == 'running' ]] && [[ "$state2" == 'running' ]] ; then
 	echo "Instance are already running. Skipping startup"
 else
 	aws ec2 start-instances --instance-ids $i1 $i2
+	echo "Starting instances, waiting 12s."
+	sleep 12
 fi
 
 ## Connection Stuff
@@ -37,7 +42,7 @@ re='^[0-9]+$'
 if ! [[ $server =~ $re ]] ; then
    echo "error: Not a number" >&2; exit 1
 fi
-ssh -i $HOME/.ssh/joeskeyaws_ohio.pem ubuntu@`echo ${my_array[$server - 1]}`
+ssh -i $HOME/.ssh/joeskeyaws_ohio.pem -o "StrictHostKeyChecking no" ubuntu@`echo ${my_array[$server - 1]}`
 
 # Testing stuff
 #echo ${#my_array[@]}
