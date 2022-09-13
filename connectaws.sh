@@ -34,6 +34,7 @@ do
 	echo $x ${my_array[$i]}
 	i=$(( $i + 1 ))
 	x=$(( $x + 1 ))
+	# Add logic to set the IP to a hostname var for easier reconnects.
 done
 
 read -p 'Choose a server: ' server
