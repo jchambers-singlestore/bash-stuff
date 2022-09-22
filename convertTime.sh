@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# MacOS ONLY! This will not work on Linux.
 # This script will find any 10-digit number and convert it to a date/time stamp format YYYY-MM-DD HH:MM:SS.
 # Useful for the cluster report's informationSchemaPipelines outputs.
 #
