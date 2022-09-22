@@ -35,7 +35,7 @@ GREP_OPTIONS=
 input=$1
 
 ############################################################
-# Check that the user provides na input file               #
+# Check that the user provides an input file               #
 ############################################################
 
 if [ -f $1 ]
