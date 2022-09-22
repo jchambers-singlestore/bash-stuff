@@ -38,11 +38,19 @@ input=$1
 # Check that the user provides na input file               #
 ############################################################
 
+if [ -f $1 ]
+then
+        echo "Converting the timestamps in $1."
+else
+        echo "The given argument does not exist on the file system."
+	echo "Syntax: ./converttime.sh <input file>"
+	exit 1
+fi
 
 if [[ $# -eq 0 ]] ; then
-    echo "Error: Proivde an input file."
-    echo "Syntax: ./converttime.sh <input file>"
-    exit 1
+	echo "Error: Proivde an input file."
+	echo "Syntax: ./converttime.sh <input file>"
+	exit 1
 fi
 
 ############################################################
