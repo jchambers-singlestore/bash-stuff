@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # MacOS ONLY! This will not work on Linux.
-# This script will find any 10-digit number and convert it to a date/time stamp format YYYY-MM-DD HH:MM:SS.
+# This script will find any 10-digit number and convert it to a date/time stamp format YYYY-MM-DD HH:MM:SS -- in UTC!.
 # Useful for the cluster report's informationSchemaPipelines outputs.
 #
 # CAUTION: Since we can the entire text file for 10-digit numbers, we could possibly convert a customer's number string into a date/time format.
@@ -35,7 +35,7 @@ GREP_OPTIONS=
 input=$1
 
 ############################################################
-# Check that the user provides an input file               #
+# Check that the user provides na input file               #
 ############################################################
 
 if [ -f $1 ]
@@ -60,7 +60,7 @@ fi
 while IFS= read -r line
 do
 
-	dates=`echo $line | grep -o '[0-9]\{10\}'`
+	dates=`echo $line | grep -o '[0-9]\{10\}\.[0-9]*' | grep -o '[0-9]\{10\}'`
 	date2=$(date -jur $dates '+%Y-%m-%d %H:%M:%S' 2>/dev/null)
 	echo $line | sed "s/[0-9]\{10\}/$date2/g" >> ./$input.timestampConverted.txt
 
