@@ -1,5 +1,10 @@
 #!/bin/bash
 
+######## Change to your ssh key and tag ########
+export key_path=$HOME/.ssh/joeskeyaws_ohio.pem
+export tag=jchambers
+################################################
+
 #check if the credentials file exists
 if [ ! -f ~/Downloads/credentials ]; then
     echo "Credentials file not found!"
@@ -54,16 +59,14 @@ read_credentials
 # Validate the AWS credentials
 validate_credentials
 
-export key_path=/Users/chambj/.ssh/joeskeyaws_ohio.pem
-
 #check if the key_path environment variable is set
 if [ -z "$key_path" ]; then
     echo "Key path not found!"
     exit 1
 fi
 
-# List EC2 instances with key name containing jchambers
-aws ec2 describe-instances --filters Name=tag:Name,Values='*jchambers*' \
+# List EC2 instances with key name containing your tag
+aws ec2 describe-instances --filters Name=tag:Name,Values='*$tag*' \
 --query 'Reservations[*].Instances[*].[InstanceId, PrivateIpAddress, PublicIpAddress, Tags[?Key==`Name`].Value[]]'
 
 # Prompt user to ssh with chosen key
