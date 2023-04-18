@@ -24,7 +24,7 @@ do
   else
     if [ "$key" == "Buffer_manager_memory" ]; then
       echo "  ├─ $mem"
-      sub_keys=("Buffer_manager_cached_memory" "Alloc_query_execution" "Alloc_table_memory" "Alloc_query_ingest")
+      sub_keys=("Buffer_manager_cached_memory" "Alloc_query_execution" "Alloc_query_ingest" "Alloc_table_memory")
       for sub_key in "${sub_keys[@]}"
       do
         sub_mem=$(grep -i "$sub_key" $filename | rg -v Alloc_query_execution_temp_table | sed 's/^[0-9]* [0-9]*-[0-9]*-[0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*  ERROR: //' | sed 's/.*|.*|.*|.*|\([^|]*\) | \([^|]*\).*/\1 | \2/g' | sed 's/|//g')
