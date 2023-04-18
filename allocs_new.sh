@@ -29,7 +29,7 @@ do
       do
         sub_mem=$(grep -i "$sub_key" $filename | rg -v Alloc_query_execution_temp_table | sed 's/^[0-9]* [0-9]*-[0-9]*-[0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*  ERROR: //' | sed 's/.*|.*|.*|.*|\([^|]*\) | \([^|]*\).*/\1 | \2/g' | sed 's/|//g')
         if [ -z "$sub_mem" ]; then
-          echo "  │    ├─ $sub_key (not found)"
+          echo "  │    ├─  $sub_key (not found)"
         else
           if [ "$sub_key" == "Alloc_table_memory" ]; then
             echo "  │    ├─ $sub_mem"
