@@ -61,9 +61,8 @@ aws configure set region $desired_region
 echo "Connecting using region $desired_region"
 
 # List EC2 instances with key name containing your tag
-aws ec2 describe-instances --filters Name=tag:Name,Values="*$tag*" \
---query 'Reservations[*].Instances[*].[InstanceId, PrivateIpAddress, PublicIpAddress, Tags[?Key==`Name`].Value[]]' \
---profile $profile
+(echo "Tag Name|Instance ID|Private IP|Public IP" && aws ec2 describe-instances --filters Name=tag:Name,Values="*$tag*" --query 'Reservations[*].Instances[*].[join(`|`, [Tags[?Key==`Name`].Value | [0], InstanceId, PrivateIpAddress, PublicIpAddress] | map(&to_string(@), @))]' --profile $profile --output text) | column -t -s '|'
+
 
 # Prompt user to ssh with chosen key
 read -p "Enter the ID of the instance you want to SSH into: " instance_id
@@ -100,6 +99,10 @@ function ssh_instance {
         sleep 15
         instance_status=$(aws ec2 describe-instances --instance-ids $instance_id --query "Reservations[*].Instances[*].State.Name" --output text --profile $profile)
     done
+
+# Save the IP to a file with the tag name in the users home/.aws/ dir
+    FILENAME=$(aws ec2 describe-instances --instance-id $instance_id --query "Reservations[*].Instances[*].[Tags[?Key=='Name'].Value]" --output text --profile $profile)
+    aws ec2 describe-instances --instance-id $instance_id --query "Reservations[*].Instances[*].PublicIpAddress" --output text --profile $profile > $HOME/.aws/$FILENAME
 
     echo "SSHing into instance $instance_id with key $key_path..."
     ssh -i $key_path -o "StrictHostKeyChecking no" ubuntu@$(aws ec2 describe-instances --instance-id $instance_id --query "Reservations[*].Instances[*].PublicIpAddress" --output text --profile $profile)
